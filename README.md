@@ -277,6 +277,56 @@ This deletes the local development database volume and recreates the schema.
 - Designed a relational **PostgreSQL** data model with foreign keys, constraints, indexes, filtering, and stage-level pipeline analytics; added Zod validation and centralized error handling.
 - Containerized PostgreSQL with **Docker Compose** and configured **GitHub Actions CI** to run ESLint, Jest/Supertest tests, and a production frontend build on pushes and pull requests.
 
+```text
+.github/workflows/ci.yml
+```
+
+On pushes and pull requests to `main`, GitHub automatically:
+
+1. Checks out the repository
+2. Installs Node.js 20
+3. Installs dependencies
+4. Runs ESLint
+5. Runs the Jest test suite
+
+## Design Decisions
+
+### Why PostgreSQL?
+
+The domain has clear relationships:
+
+- one user owns many jobs
+- one job contains many candidates
+
+PostgreSQL provides foreign keys, unique constraints, indexes, and reliable transactional behavior.
+
+### Why JWT?
+
+JWT authentication keeps the API stateless and is straightforward for frontend or mobile clients to consume.
+
+### Why Zod?
+
+Validation happens before controller logic, preventing malformed requests from reaching database operations.
+
+### Why separate routes and controllers?
+
+It keeps HTTP routing separate from application logic and makes the codebase easier to test and extend.
+
+## Possible Extensions
+
+This project is intentionally scoped. Natural next steps would include:
+
+- React dashboard
+- refresh tokens
+- pagination
+- role-based authorization
+- interview scheduling
+- candidate activity history
+- email notifications
+- OpenAPI / Swagger docs
+- Redis caching
+- deployment to AWS
+
 ## License
 
 MIT
