@@ -1,15 +1,25 @@
 {
   "name": "interviewflow-api",
   "version": "1.0.0",
-  "description": "A production-style REST API for managing jobs, candidates, and interview pipelines.",
+  "description": "Full-stack recruiting pipeline with React, TypeScript, Node.js, Express, and PostgreSQL.",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "test": "jest --runInBand",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "client:dev": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "check": "npm run lint && npm test && npm run client:build"
   },
-  "keywords": ["nodejs", "express", "postgresql", "rest-api", "jwt", "docker"],
+  "keywords": [
+    "nodejs",
+    "express",
+    "postgresql",
+    "rest-api",
+    "jwt",
+    "docker"
+  ],
   "author": "Aryan Singhal",
   "license": "MIT",
   "dependencies": {

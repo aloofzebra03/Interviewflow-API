@@ -1,58 +1,63 @@
-# InterviewFlow API
+# InterviewFlow
 
-A production-style REST API for managing job openings, candidates, and interview pipelines.
+InterviewFlow is a compact full-stack recruiting pipeline application built to demonstrate practical product engineering with **React, TypeScript, Node.js, Express, PostgreSQL, Docker, testing, and CI**.
 
-The project is intentionally small enough to understand end-to-end, while still demonstrating practical backend engineering patterns with **Node.js, Express, PostgreSQL, authentication, validation, Docker, testing, and CI**.
-
-## Features
-
-- User registration and login with JWT authentication
-- Password hashing with bcrypt
-- Create, read, update, and delete job openings
-- Add candidates to jobs
-- Move candidates through hiring stages
-- Filter candidates by stage and score
-- Per-job pipeline summary
-- PostgreSQL relational data model
-- Input validation with Zod
-- Centralized error handling
-- Helmet, CORS, API rate limiting, and request logging
-- Docker Compose for local PostgreSQL
-- Jest + Supertest tests
-- GitHub Actions CI for linting and tests
+Recruiters can create job openings, add candidates, move candidates through hiring stages, and view stage-level pipeline counts from a responsive React dashboard.
 
 ## Tech Stack
 
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Database:** PostgreSQL
-- **Database Driver:** `pg`
-- **Authentication:** JWT + bcrypt
-- **Validation:** Zod
-- **Testing:** Jest + Supertest
-- **Infrastructure:** Docker Compose
-- **CI:** GitHub Actions
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Responsive CSS
+
+### Backend
+- Node.js
+- Express.js
+- PostgreSQL (`pg`)
+- JWT authentication
+- bcrypt password hashing
+- Zod validation
+
+### Engineering / DevOps
+- Docker Compose for PostgreSQL
+- Jest + Supertest
+- ESLint
+- GitHub Actions CI
+- Helmet, CORS, rate limiting, centralized error handling
+
+## Features
+
+- Register and log in as a recruiter
+- JWT-protected API routes
+- Create and list job openings
+- Add candidates to a selected job
+- Move candidates through:
+  - `APPLIED`
+  - `SCREENING`
+  - `INTERVIEW`
+  - `OFFER`
+  - `HIRED`
+  - `REJECTED`
+- View live pipeline counts by stage
+- Filter candidates through backend query parameters
+- PostgreSQL foreign keys, unique constraints, indexes, and cascading deletes
+- Responsive React + TypeScript dashboard
+- Automated API lint/tests and frontend production build in GitHub Actions
 
 ## Architecture
 
 ```text
-Client
-  |
-  v
-Express Routes
-  |
-  +--> Authentication Middleware
-  |
-  +--> Zod Validation
-  |
-  v
-Controllers
-  |
-  v
-PostgreSQL
+React + TypeScript Client (Vite)
+             |
+             | REST / JSON + JWT
+             v
+       Node.js + Express
+             |
+             v
+         PostgreSQL
 ```
-
-The project is separated into routes, controllers, validation, middleware, and infrastructure configuration so application concerns remain easy to understand and maintain.
 
 ## Project Structure
 
@@ -61,64 +66,54 @@ interviewflow-api/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
+├── client/
+│   ├── src/
+│   │   ├── api.ts
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   ├── styles.css
+│   │   └── types.ts
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
 ├── db/
 │   └── init.sql
 ├── src/
 │   ├── config/
-│   │   └── db.js
 │   ├── controllers/
-│   │   ├── auth.controller.js
-│   │   ├── candidate.controller.js
-│   │   └── job.controller.js
 │   ├── middleware/
-│   │   ├── auth.js
-│   │   ├── errorHandler.js
-│   │   └── validate.js
 │   ├── routes/
-│   │   ├── auth.routes.js
-│   │   ├── candidate.routes.js
-│   │   └── job.routes.js
 │   ├── utils/
-│   │   ├── asyncHandler.js
-│   │   └── jwt.js
 │   ├── validators/
-│   │   ├── auth.validators.js
-│   │   ├── candidate.validators.js
-│   │   └── job.validators.js
 │   ├── app.js
 │   └── server.js
 ├── tests/
 │   └── health.test.js
 ├── .env.example
-├── .gitignore
 ├── docker-compose.yml
 ├── eslint.config.js
-├── package.json
-└── README.md
+└── package.json
 ```
 
-## Getting Started
+## Local Setup
 
 ### Prerequisites
 
-Install:
-
 - Node.js 20+
 - npm
-- Docker Desktop or Docker Engine
-- Git
+- Docker Desktop / Docker Engine
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/interviewflow-api.git
-cd interviewflow-api
-```
-
-### 2. Install dependencies
+### 1. Install API dependencies
 
 ```bash
 npm install
+```
+
+### 2. Install client dependencies
+
+```bash
+npm --prefix client install
 ```
 
 ### 3. Create the environment file
@@ -135,7 +130,7 @@ Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-Default development values:
+Default development configuration:
 
 ```env
 PORT=4000
@@ -151,45 +146,57 @@ NODE_ENV=development
 docker compose up -d
 ```
 
-The database tables are created automatically from `db/init.sql` when the PostgreSQL volume is initialized for the first time.
+`db/init.sql` initializes the schema the first time the database volume is created.
 
 ### 5. Start the API
 
-Development mode:
+Terminal 1:
 
 ```bash
 npm run dev
 ```
 
-Production-style mode:
+API: `http://localhost:4000`
+
+Health check: `http://localhost:4000/health`
+
+### 6. Start the React client
+
+Terminal 2:
 
 ```bash
-npm start
+npm run client:dev
 ```
 
-API:
+Client: `http://localhost:5173`
 
-```text
-http://localhost:4000
+The client defaults to calling `http://localhost:4000`. To use another backend URL, create `client/.env`:
+
+```env
+VITE_API_URL=http://localhost:4000
 ```
 
-Health check:
+## Useful Commands
 
-```text
-GET http://localhost:4000/health
+```bash
+npm run lint
+npm test
+npm run client:build
+npm run check
 ```
 
-## API Endpoints
+`npm run check` runs backend lint, backend tests, and the React production build.
+
+## API Overview
 
 ### Authentication
 
-#### Register
-
 ```http
 POST /api/auth/register
+POST /api/auth/login
 ```
 
-Request:
+Example registration body:
 
 ```json
 {
@@ -199,287 +206,76 @@ Request:
 }
 ```
 
-#### Login
-
-```http
-POST /api/auth/login
-```
-
-Request:
-
-```json
-{
-  "email": "aryan@example.com",
-  "password": "password123"
-}
-```
-
-The response contains a JWT token.
-
-For authenticated endpoints, send:
+Authenticated routes require:
 
 ```http
 Authorization: Bearer YOUR_TOKEN
 ```
 
----
-
 ### Jobs
 
-#### Create a job
-
 ```http
-POST /api/jobs
-```
-
-```json
-{
-  "title": "Software Engineer",
-  "department": "Engineering",
-  "location": "Remote"
-}
-```
-
-#### List jobs
-
-```http
-GET /api/jobs
-```
-
-Each job also includes its current candidate count.
-
-#### Get one job
-
-```http
-GET /api/jobs/:id
-```
-
-#### Update a job
-
-```http
-PATCH /api/jobs/:id
-```
-
-Example:
-
-```json
-{
-  "status": "PAUSED"
-}
-```
-
-Allowed job statuses:
-
-- `OPEN`
-- `PAUSED`
-- `CLOSED`
-
-#### Delete a job
-
-```http
+POST   /api/jobs
+GET    /api/jobs
+GET    /api/jobs/:id
+PATCH  /api/jobs/:id
 DELETE /api/jobs/:id
 ```
 
-Deleting a job also deletes its candidates through PostgreSQL cascading foreign keys.
-
----
-
 ### Candidates
 
-#### Add a candidate
+```http
+POST  /api/jobs/:jobId/candidates
+GET   /api/jobs/:jobId/candidates
+PATCH /api/candidates/:id
+GET   /api/jobs/:jobId/pipeline-summary
+```
+
+Candidate filters are supported, for example:
 
 ```http
-POST /api/jobs/:jobId/candidates
-```
-
-```json
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "score": 82,
-  "notes": "Strong backend fundamentals."
-}
-```
-
-#### List candidates
-
-```http
-GET /api/jobs/:jobId/candidates
-```
-
-Optional filters:
-
-```text
 GET /api/jobs/:jobId/candidates?stage=INTERVIEW&minScore=75
 ```
 
-#### Update candidate stage, score, or notes
+## Database Model
 
-```http
-PATCH /api/candidates/:id
-```
+### `users`
+Recruiter accounts with hashed passwords.
 
-```json
-{
-  "stage": "INTERVIEW",
-  "score": 88
-}
-```
+### `jobs`
+Each job belongs to one recruiter.
 
-Allowed candidate stages:
+### `candidates`
+Each candidate belongs to one job. A `(job_id, email)` unique constraint prevents duplicate candidates for the same opening.
 
-- `APPLIED`
-- `SCREENING`
-- `INTERVIEW`
-- `OFFER`
-- `HIRED`
-- `REJECTED`
+Indexes are defined for common ownership, job, and stage lookups.
 
-#### Pipeline summary
+## CI
 
-```http
-GET /api/jobs/:jobId/pipeline-summary
-```
+`.github/workflows/ci.yml` runs on pushes and pull requests to `main` and performs:
 
-Example response:
+1. API dependency installation
+2. React client dependency installation
+3. API ESLint checks
+4. Jest/Supertest tests
+5. TypeScript + Vite production build
 
-```json
-{
-  "jobId": "uuid",
-  "totalCandidates": 8,
-  "stages": [
-    {
-      "stage": "APPLIED",
-      "count": 3
-    },
-    {
-      "stage": "INTERVIEW",
-      "count": 4
-    },
-    {
-      "stage": "OFFER",
-      "count": 1
-    }
-  ]
-}
-```
-
-## Example cURL Workflow
-
-### Register
-
-```bash
-curl -X POST http://localhost:4000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Aryan Singhal","email":"aryan@example.com","password":"password123"}'
-```
-
-Copy the returned token.
-
-### Create a job
-
-```bash
-curl -X POST http://localhost:4000/api/jobs \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Software Engineer","department":"Engineering","location":"Remote"}'
-```
-
-### List jobs
-
-```bash
-curl http://localhost:4000/api/jobs \
-  -H "Authorization: Bearer YOUR_TOKEN"
-```
-
-## Testing
-
-Run:
-
-```bash
-npm test
-```
-
-The included tests cover the health route and 404 handling without requiring a running database.
-
-## Linting
-
-```bash
-npm run lint
-```
-
-## Resetting the Local Database
-
-If you want to delete all local PostgreSQL data and recreate the schema:
+## Reset Local PostgreSQL
 
 ```bash
 docker compose down -v
 docker compose up -d
 ```
 
-**Warning:** this deletes the local development database volume.
+This deletes the local development database volume and recreates the schema.
 
-## CI/CD
+## Resume Summary
 
-A GitHub Actions workflow is included in:
+**InterviewFlow — React, TypeScript, Node.js, Express, PostgreSQL, Docker**
 
-```text
-.github/workflows/ci.yml
-```
-
-On pushes and pull requests to `main`, GitHub automatically:
-
-1. Checks out the repository
-2. Installs Node.js 20
-3. Installs dependencies
-4. Runs ESLint
-5. Runs the Jest test suite
-
-## Design Decisions
-
-### Why PostgreSQL?
-
-The domain has clear relationships:
-
-- one user owns many jobs
-- one job contains many candidates
-
-PostgreSQL provides foreign keys, unique constraints, indexes, and reliable transactional behavior.
-
-### Why JWT?
-
-JWT authentication keeps the API stateless and is straightforward for frontend or mobile clients to consume.
-
-### Why Zod?
-
-Validation happens before controller logic, preventing malformed requests from reaching database operations.
-
-### Why separate routes and controllers?
-
-It keeps HTTP routing separate from application logic and makes the codebase easier to test and extend.
-
-## Possible Extensions
-
-This project is intentionally scoped. Natural next steps would include:
-
-- React dashboard
-- refresh tokens
-- pagination
-- role-based authorization
-- interview scheduling
-- candidate activity history
-- email notifications
-- OpenAPI / Swagger docs
-- Redis caching
-- deployment to AWS
-
-## Resume Description
-
-**InterviewFlow API — Node.js, Express, PostgreSQL, Docker, JWT**
-
-- Built a production-style REST API for job and candidate workflow management using **Node.js, Express, and PostgreSQL**, implementing authenticated CRUD operations, relational data modeling, filtering, and pipeline analytics.
-- Added **JWT authentication, bcrypt password hashing, Zod validation, centralized error handling, database constraints/indexes, and API security middleware** for reliable request processing.
-- Containerized PostgreSQL with **Docker Compose** and configured **GitHub Actions CI** to automatically run ESLint and Jest/Supertest tests on pushes and pull requests.
+- Built a full-stack recruiting pipeline with a responsive **React + TypeScript** dashboard and **Node.js/Express REST API**, supporting JWT-authenticated job and candidate workflows.
+- Designed a relational **PostgreSQL** data model with foreign keys, constraints, indexes, filtering, and stage-level pipeline analytics; added Zod validation and centralized error handling.
+- Containerized PostgreSQL with **Docker Compose** and configured **GitHub Actions CI** to run ESLint, Jest/Supertest tests, and a production frontend build on pushes and pull requests.
 
 ## License
 

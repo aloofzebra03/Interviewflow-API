@@ -1,0 +1,73 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #172033;
+  background: #f4f6fa;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+
+.auth-shell { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+.auth-card, .card { background: white; border: 1px solid #e4e8f0; border-radius: 14px; box-shadow: 0 8px 28px rgba(31, 42, 68, 0.06); }
+.auth-card { width: min(440px, 100%); padding: 32px; }
+.brand { font-weight: 800; letter-spacing: -0.02em; font-size: 20px; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 8px; }
+.muted { color: #6a7282; }
+.stack { display: grid; gap: 12px; }
+input, select { width: 100%; border: 1px solid #d5dae4; border-radius: 9px; padding: 10px 12px; background: white; color: #172033; }
+input:focus, select:focus { outline: 2px solid #b9c8ff; border-color: #6f8dff; }
+button { border: 0; border-radius: 9px; padding: 10px 14px; background: #315bea; color: white; font-weight: 700; }
+button:disabled { opacity: 0.6; cursor: wait; }
+.secondary, .link-button { background: transparent; color: #315bea; }
+.link-button { padding-left: 0; margin-top: 12px; }
+.error { background: #fff1f0; border: 1px solid #ffc7c2; color: #a52a1f; padding: 10px 12px; border-radius: 9px; margin-bottom: 14px; }
+
+.app-shell { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+.sidebar { padding: 20px; position: sticky; top: 20px; }
+.job-list { display: grid; gap: 8px; margin: 14px 0 24px; }
+.job-item { background: #f7f8fb; color: #172033; text-align: left; display: grid; gap: 4px; border: 1px solid transparent; }
+.job-item span { color: #70798b; font-size: 12px; font-weight: 500; }
+.job-item.active { border-color: #8da5ff; background: #eef2ff; }
+.compact-form { border-top: 1px solid #e8ebf1; padding-top: 20px; }
+.content { display: grid; gap: 16px; }
+.job-header { padding: 24px; display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+.job-header h1 { margin-bottom: 6px; }
+.eyebrow { display: inline-block; font-size: 11px; font-weight: 800; color: #315bea; background: #eef2ff; border-radius: 999px; padding: 4px 8px; margin-bottom: 8px; }
+.summary-total { min-width: 110px; text-align: center; display: grid; }
+.summary-total strong { font-size: 34px; }
+.summary-total span { color: #70798b; font-size: 12px; }
+.stage-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.stage-card { background: white; border: 1px solid #e4e8f0; border-radius: 11px; padding: 14px; display: grid; gap: 8px; }
+.stage-card span { color: #70798b; font-size: 11px; font-weight: 800; }
+.stage-card strong { font-size: 24px; }
+.content > .card, .content section.card { padding: 22px; }
+.section-heading { display: flex; justify-content: space-between; align-items: center; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #edf0f5; padding: 12px 8px; text-align: left; font-size: 14px; }
+th { color: #70798b; font-size: 12px; }
+td select { min-width: 135px; padding: 7px 8px; }
+.empty-cell, .empty-state { text-align: center; color: #70798b; padding: 40px !important; }
+.candidate-form { display: grid; grid-template-columns: 1fr 1fr 140px 1fr auto; gap: 10px; }
+.page-error { margin-bottom: 16px; }
+
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .stage-grid { grid-template-columns: repeat(3, 1fr); }
+  .candidate-form { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .app-shell { padding: 14px; }
+  .stage-grid { grid-template-columns: repeat(2, 1fr); }
+  .candidate-form { grid-template-columns: 1fr; }
+  .job-header { align-items: flex-start; }
+}

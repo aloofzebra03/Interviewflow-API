@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,11 +19,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install API dependencies
         run: npm install
 
-      - name: Run lint
+      - name: Install client dependencies
+        run: npm --prefix client install
+
+      - name: Run API lint
         run: npm run lint
 
-      - name: Run tests
+      - name: Run API tests
         run: npm test
+
+      - name: Build React client
+        run: npm run client:build
