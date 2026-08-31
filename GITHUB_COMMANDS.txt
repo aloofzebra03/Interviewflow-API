@@ -1,0 +1,31 @@
+1) Open a terminal inside the interviewflow-api directory.
+
+2) Initialize Git:
+
+git init
+git add .
+git commit -m "Initial commit: InterviewFlow REST API"
+git branch -M main
+
+3) Go to GitHub and create a NEW EMPTY repository named:
+
+interviewflow-api
+
+Do NOT initialize it with README, .gitignore, or license because they already exist locally.
+
+4) Connect the local repo.
+
+Replace YOUR_USERNAME below:
+
+git remote add origin https://github.com/YOUR_USERNAME/interviewflow-api.git
+git push -u origin main
+
+5) For future changes:
+
+git add .
+git commit -m "Describe your change"
+git push
+
+OPTIONAL: GitHub CLI method
+
+gh repo create interviewflow-api --public --source=. --remote=origin --push
